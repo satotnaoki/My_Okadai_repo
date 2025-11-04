@@ -1,0 +1,24 @@
+ services:
+  sage:
+   image: sagemath/sagemath:latest
+   container_name: sage
+   working_dir: /home/sage/work
+   volumes:
+   - ./work:/home/sage/work
+   tty: true
+   stdin_open: true
+   user: "${UID:-1000}:${GID:-1000}"
+   environment:
+   - SAGE_NUM_THREADS=${SAGE_NUM_THREADS:-4}
+   command: ["bash"]
+  notebook:
+   image: sagemath/sagemath:latest
+   working_dir: /home/sage/work
+   volumes:
+   - ./work:/home/sage/work
+   ports:
+   - "8888:8888"
+   user: "${UID:-1000}:${GID:-1000}"
+   environment:
+   - SAGE_NUM_THREADS=${SAGE_NUM_THREADS:-4}
+   command: ["bash", "sage -n jupyter --ip=0.0.0.0 --no-browser --NotebookApp.token=''"]
